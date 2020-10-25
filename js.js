@@ -1,6 +1,8 @@
+const now = moment().format('MMM Do YYYY')
+    console.log(moment().format('MMM Do YYYY'))
 // loop over time blocks
 
-function hourUpdater() {
+function hourUpdater() { 
     var currentHour = moment().hours();
 
 
