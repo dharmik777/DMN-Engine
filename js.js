@@ -1,49 +1,64 @@
-$(document).ready(function () {
 
+$(document).ready(function () {
 
     var currentDay = moment().format("[Today is] dddd, MMMM Do YYYY")
     var currentHour = moment().format('HH')
 
     $("#currentDay").text(currentDay);
-    $(".description").each(function () {
 
+        $(".description").each(function () {
+ 
         var timeblockHour = $(this).prev().attr("data-time")
         var locallyStored = JSON.parse(localStorage.getItem(timeblockHour))
         console.log(timeblockHour)
+ 
+        if (timeblockHour < currentHour) {
+            $(this).removeClass("future");
+            $(this).removeClass("present");
+            $(this).addClass("past");
+        }
 
+        else if (timeblockHour > currentHour) {
+            $(this).removeClass("present");
+            $(this).removeClass("past");
+            $(this).addClass("future")
+        }
+
+        else if (currentHour === timeblockHour) {
+            $(this).removeClass("past");
+            $(this).removeClass("future");
+            $(this).addClass("present");
+        }
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        if (locallyStored === null) {
+            return
+        }
+        
+        else {
+            $(this).empty();
+            $(this).text(locallyStored)
+        }
+    });
 
 
 
     
+    $(".saveBtn").on("click", function () {
+        var locallyStoredEvent = localStorage.getItem($(this).prev().prev().attr('data-time'))
+        var timeBlockText = $(this).prev().val().trim();
+
+        locallyStoredEvent = JSON.stringify(timeBlockText)
+        localStorage.setItem($(this).prev().prev().attr('data-time'), locallyStoredEvent)
+     }) 
+   
+    $("#clearCal").on("click", function () {
+
+        localStorage.clear();
+        location.reload();
+    })
 
 
-
+});
 
 
 
