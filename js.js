@@ -1,23 +1,120 @@
-$(document).ready(function() {
-    var currentDay = moment().format('dddd MMMM Do YYYY');
-    var hour = moment().hour();
-    console.log(hour);
-    $("#currentDay").append(currentDay).text;
+$(document).ready(function () {
 
-    $("btn9").on("click", function (event) {
-        event.preventDefault();
-        var user = {
-            input: userInput
+
+    var currentDay = moment().format("[Today is] dddd, MMMM Do YYYY")
+    var currentHour = moment().format('HH')
+
+    
+    $("#currentDay").text(currentDay);
+    $(".description").each(function () {
+
+        var timeblockHour = $(this).prev().attr("data-time")
+        var locallyStored = JSON.parse(localStorage.getItem(timeblockHour))
+        console.log(timeblockHour)
+
+        if (timeblockHour < currentHour) {
+            $(this).removeClass("future");
+            $(this).removeClass("present");
+            $(this).addClass("past");
         }
-        var userInput = $(this).siblings("textarea").val();
 
-        localStorage.setItem("input", userInput);
-        var lastInput = localStorage.getItem("input");
-        var JSONFinal = JSON.stringify(lastInput).val();
-        $("#text9").append(JSONFinal.input);
+        else if (timeblockHour > currentHour) {
+            $(this).removeClass("present");
+            $(this).removeClass("past");
+            $(this).addClass("future")
+        }
+
+        else if (currentHour === timeblockHour) {
+            $(this).removeClass("past");
+            $(this).removeClass("future");
+            $(this).addClass("present");
+        }
+
+        if (locallyStored === null) {
+            return
+        }
+
+        else {
+            $(this).empty();
+            $(this).text(locallyStored)
+        }
+    });
+
+
+
+    $(".saveBtn").on("click", function () {
+        var locallyStoredEvent = localStorage.getItem($(this).prev().prev().attr('data-time'))
+        var timeBlockText = $(this).prev().val().trim();
+
+        locallyStoredEvent = JSON.stringify(timeBlockText)
+        localStorage.setItem($(this).prev().prev().attr('data-time'), locallyStoredEvent)
+
+    }) 
+    $("#clearCal").on("click", function () {
+
+        localStorage.clear();
+        location.reload();
 
     })
-})
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// $(document).ready(function() {
+//     var currentDayEl = moment().format('dddd MMMM Do YYYY');
+//     var hour = moment().hour();
+//     console.log(hour);
+//     $("#currentDay").append(currentDay).text;
+
+//     $("btn9").on("click", function (event) {
+//         event.preventDefault();
+//         var user = {
+//             input: userInput
+//         }
+//         var userInput = $(this).siblings("textarea").val();
+
+//         localStorage.setItem("input", userInput);
+//         var lastInput = localStorage.getItem("input");
+//         var JSONFinal = JSON.stringify(lastInput).val();
+//         $("#text9").append(JSONFinal.input);
+
+//     })
+// })
 
 
 
@@ -64,7 +161,7 @@ $(document).ready(function() {
 //           var time = $(this).parent().attr("id");
 //           localStorage.setItem("time", "value");
 //     })
-    
+
 // })
 
 
